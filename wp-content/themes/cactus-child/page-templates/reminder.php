@@ -1,0 +1,1 @@
+<?php	/*		Template Name: Reminder	*/	get_header(); 	reviews_send_softreminders();?><script>	 window.location.href = SITE_URL;</script>
