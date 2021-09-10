@@ -5,10 +5,10 @@ mkdir $ROOT
 # Backup web files
 WEBPATH=$ROOT/web
 mkdir $WEBPATH
-rsync -a . $WEBPATH --exclude .git
+rsync -a --info=progress2 . $WEBPATH --exclude .git
 
 # Backup db
 DBPATH=$ROOT/db
 mkdir $DBPATH
-mysqldump -u$2 -p$3 --databases co2db > $DBPATH/dump.sql
+mysqldump -u$2 -p$3 --databases co2db > $DBPATH/dump.sql 2> /dev/null
 echo 'comaster2 backup finished'
