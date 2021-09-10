@@ -6,6 +6,17 @@ $REVIEWFORMENG = 'ini/reviewEng.pdf';
 $REPLYFORMRUS = 'ini/replyRus.pdf';
 $REPLYFORMENG = 'ini/replyEng.pdf';
 $TEMPDIR = 'temp/';
+$LOGSDIR = $TEMPDIR . '/logs';
+
+// Init file structure
+function files_init()
+{
+	global $TEMPDIR;
+	files_make_directory_TH($TEMPDIR);
+	global $LOGSDIR;
+	files_make_directory_TH($LOGSDIR);
+}
+files_init();
 
 //-----General file functions
 
@@ -22,6 +33,17 @@ function files_get_absolute_path($subpath)
 {
 	global $FILESFOLDER;
 	return $FILESFOLDER . $subpath;
+}
+
+//Get relative path
+function files_get_relative_path($abspath)
+{
+	global $FILESFOLDER;
+	if (mb_strpos($abspath, $FILESFOLDER) === 0)
+		$relpath = mb_substr($abspath, mb_strlen($FILESFOLDER));
+	else $relpath = $abspath;
+
+	return $relpath;
 }
 
 //Get url path
@@ -78,6 +100,14 @@ function files_make_directory_TH($subfolder)
 	}
 }
 
+
+//Get list of directories
+function files_ls($subfolder)
+{
+	$apath = files_get_absolute_path($subfolder);
+	return glob($apath . '/*');
+}
+
 //Write text to file
 function files_write_text_TH($text, $filename, $encoding)
 {
@@ -87,6 +117,17 @@ function files_write_text_TH($text, $filename, $encoding)
 		mb_convert_encoding($text, $encoding)
 	);
 	if (!$result) throw new Exception("Ошибка создания файла '{$filename}'");
+}
+
+// Read text from file (in FILE directory)
+function files_read_text_TH($filename, $encoding = 'UTF-8')
+{
+	global $FILESFOLDER;
+	$result = file_get_contents($FILESFOLDER . $filename);
+
+	if (false === $result) throw new Exception("Ошибка чтения файла", array('function' => __FUNCTION__, 'value' => $filename));
+
+	return mb_convert_encoding($result, $encoding);
 }
 
 //Copy file
@@ -433,4 +474,64 @@ function files_get_reply_pdf($ID_Article, $ID_Review)
 		if (mb_strpos($file['name'], 'Reply') === 0) return $file;
 	}
 	return null;
+}
+
+/***** LOGS *****/
+
+function files_write_log($prefix, $message, $value = null)
+{
+	// Object output
+	$log = [
+		'DateTime' => date('Y-m-d H:i:s'),
+		'ID_User' => is_user_logged_in() ? wp_get_current_user()->ID : null,
+		'Prefix' => $prefix,
+		'Message' => $message,
+		'Value' => $value
+	];
+
+	// Write to file
+	global $LOGSDIR;
+	$apath = files_get_absolute_path($LOGSDIR . '/log_' . date('Y-m-d') . '.txt');
+	file_put_contents(
+		$apath,
+		"\n" . json_encode($log, JSON_UNESCAPED_UNICODE) . "\n",
+		FILE_APPEND
+	);
+	chmod($apath, fileperms($apath) | 16);
+}
+
+add_action('wp_ajax_files_list_20logs_json', 'files_list_20logs_json');
+function files_list_20logs_json()
+{
+	$MAX_COUNT = 40;
+	global $LOGSDIR;
+	$list = [];
+	$files = files_ls($LOGSDIR);
+	usort($files, function ($a, $b) {
+		return filemtime($a) < filemtime($b);
+	});
+	foreach ($files as $file) {
+		$rpath = files_get_relative_path($file);
+		$text = files_read_text_TH($rpath);
+
+		$arr = explode("\n", $text);
+		for ($i = sizeof($arr); $i >= 0; $i--) {
+			$line = $arr[$i];
+			if (empty($line)) continue;
+
+			$obj = json_decode($line);
+			if (is_null($obj->ID_User)) {
+				$obj->Name = 'System';
+			} else {
+				// Get user name
+				$data = get_userdata($obj->ID_User);
+				$obj->Name = $data->display_name;
+			}
+			$list[] = $obj;
+			if (sizeof($list) > $MAX_COUNT) break;
+		}
+		if (sizeof($list) > $MAX_COUNT) break;
+	}
+	echo g_ctj($list);
+	exit();
 }
