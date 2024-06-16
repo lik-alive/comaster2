@@ -1,16 +1,16 @@
-# COMaster1
+# COMaster2
 
 ## Info
 
 **Content management system for journal publishing**
 
-This is the 2nd generation of the CMS, designed to simplify editorial processes and improve user experience.
+This is the 2nd edition of the CMS, designed to simplify editorial processes and improve user experience.
 
 The platform is an end-to-end software system that assists at every stage of the peer-reviewed publication process. It allows organizing and monitoring the editorial workflow of an academic journal from paper submission to publication and is intended for members of the editorial board. 
 
 COMaster2 includes various tools, such as a submission wizard, an expert database, a review monitor, email notifications, an official document generator and many others, aimed at automating routine tasks, increasing the efficiency of editorial processes and reducing the cost of journal publishing.
 
-The platform was deployed on the infrastructure of Image Processing Systems Institute of the Russian Academy of Sciences, implemented into the management process of Computer Optics journal and supported from 2016 to 2018.
+The platform was deployed on the infrastructure of Image Processing Systems Institute of the Russian Academy of Sciences, implemented into the management process of Computer Optics journal and supported from 2018 to 2021.
 
 ## Table of Contents
 - [Features](#features)
