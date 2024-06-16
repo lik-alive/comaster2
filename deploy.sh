@@ -36,6 +36,6 @@ if has_key "restart"; then
 else 
   echo "Start $mode"
   
-  if has_key "--prod"; then detached="-d"; fi
-  docker-compose -f docker-compose."$mode".yml --env-file .env -p "$mode"_"$name" up --build $detached
+  if has_key "--prod"; then extra="--force-recreate -d"; fi
+  docker-compose -f docker-compose."$mode".yml --env-file .env -p "$mode"_"$name" up --build $extra
 fi
