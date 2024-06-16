@@ -109,7 +109,7 @@ sudo chmod 775 .
 docker exec -it prod_com2_server php init.php
 ```
 
-7. Nginx proxy
+7. Nginx proxy  
 Don't forget to set Host in global nginx settings
 ```sh
 proxy_set_header Host $http_host;
