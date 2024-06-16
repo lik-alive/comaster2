@@ -3,6 +3,26 @@
 *.sql
 *.sqlite
 
+wp-admin
+wp-includes
+.htaccess
+license.txt
+readme.html
+/*.php
+!wp-config-mysample.php
+wp-content/plugins/*
+!wp-content/plugins/aryo-activity-log
+!wp-content/plugins/baw-login-logout-menu
+!wp-content/plugins/capability-manager-enhanced
+!wp-content/plugins/nav-menu-roles
+!wp-content/plugins/wp-force-login
+!wp-content/plugins/wp-maintenance-mode
+wp-content/themes/*
+!wp-content/themes/cactus-child
+
+!.config/*
 wp-config.php
 files/*
-!files/ini
+!files/templates
+_data
+.env
