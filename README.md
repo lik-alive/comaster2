@@ -96,6 +96,7 @@ curl https://api.wordpress.org/secret-key/1.1/salt/
 ```sh
 sudo chown www-data:www-data .
 sudo chown www-data:www-data ./files
+sudo chmod 775 .
 ```
 
 5. Deploy
@@ -106,6 +107,12 @@ sudo chown www-data:www-data ./files
 6. Create admin user
 ```sh
 docker exec -it prod_com2_server php init.php
+```
+
+7. Nginx proxy
+Don't forget to set Host in global nginx settings
+```sh
+proxy_set_header Host $http_host;
 ```
 
 ### For backup
