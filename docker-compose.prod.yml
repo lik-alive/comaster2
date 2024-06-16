@@ -9,7 +9,7 @@ services:
       - .:/var/www/html
       - ./.config/nginx.prod.conf:/etc/nginx/conf.d/default.conf
     ports:
-      - 9010:80
+      - 9020:80
 
   server:
     user: "33:33"
